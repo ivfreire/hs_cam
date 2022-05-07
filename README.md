@@ -1,2 +1,2 @@
-# hs_cam
-Hackerspace IFUSP camera
+# Infra-red sensor using Arduino
+
