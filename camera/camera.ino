@@ -1,9 +1,3 @@
-/*
-	Dept. of Atmospheric Sciences - IAG/USP
-	Created by Ícaro Vaz Freire on 24/12/2021.
-	Supervisor Prof. Márcia Yamasoe.
-	São Paulo, Brazil.
-*/
 #include "esp_camera.h"
 #include "FS.h"
 #include "SD_MMC.h"
@@ -14,6 +8,13 @@
 #define CAMERA_MODEL_AI_THINKER
 
 #include "camera_pins.h"
+
+// Set static IP address
+IPAddress local_IP(10, 7, 155, 27);
+IPAddress gateway(10, 7, 155, 1);
+IPAddress subnet(255, 255, 224, 0);
+IPAddress primaryDNS(8, 8, 8, 8); //optional
+IPAddress secondaryDNS(8, 8, 4, 4); //optional
 
 struct Config {
     char ssid[32] = "IFnet";
@@ -108,6 +109,10 @@ void initCamera(camera_config_t config) {
 // Initilizes WiFi connection
 void initWiFi(const char* ssid, const char* password) {
     Serial.println("Trying to connect to WiFi network " + (String)ssid + "...");
+
+    if(!WiFi.config(local_IP, gateway, subnet, primaryDNS, secondaryDNS)) {
+        Serial.println("STA Failed to configure");
+    }
     
     WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED) {
@@ -154,5 +159,5 @@ void setup() {
 
 void loop() {
     capture(SD_MMC);
-    delay(1000);
+    delay(30 * 1000);
 }
